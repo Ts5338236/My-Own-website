@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model AdminUser {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+}
+
+model Lead {
+  id          String   @id @default(uuid())
+  name        String
+  email       String
+  company     String
+  projectType String
+  budget      String
+  message     String
+  status      String   @default("new") // "new", "contacted", "in_progress", "closed"
+  createdAt   DateTime @default(now())
+}
+
+model CaseStudy {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  summary     String
+  content     String
+  coverImage  String
+  tags        String   // comma-separated tags e.g. "AI,ML,SaaS"
+  publishedAt DateTime @default(now())
+}
+
+model BlogPost {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  content     String
+  coverImage  String
+  tags        String   // comma-separated tags e.g. "AI,Automation"
+  publishedAt DateTime @default(now())
+}
+
+model Testimonial {
+  id          String   @id @default(uuid())
+  clientName  String
+  company     String
+  quote       String
+  avatar      String
+  rating      Int      @default(5)
+  createdAt   DateTime @default(now())
+}
