@@ -1,4 +1,3 @@
-import prisma from "@/lib/prisma";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import LogoMarquee from "@/components/LogoMarquee";
@@ -17,18 +16,28 @@ export default async function Home() {
   let caseStudies: any[] = [];
   let testimonials: any[] = [];
 
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
   try {
-    caseStudies = await prisma.caseStudy.findMany({
-      orderBy: { publishedAt: "desc" },
-    });
+    const res = await fetch(`${backendUrl}/api/case-studies`, { cache: "no-store" });
+    if (res.ok) {
+      const data = await res.json();
+      caseStudies = data.caseStudies || [];
+    } else {
+      console.error("Failed to fetch case studies from backend:", res.statusText);
+    }
   } catch (err) {
     console.error("Error fetching case studies in homepage Server Component:", err);
   }
 
   try {
-    testimonials = await prisma.testimonial.findMany({
-      orderBy: { createdAt: "desc" },
-    });
+    const res = await fetch(`${backendUrl}/api/testimonials`, { cache: "no-store" });
+    if (res.ok) {
+      const data = await res.json();
+      testimonials = data.testimonials || [];
+    } else {
+      console.error("Failed to fetch testimonials from backend:", res.statusText);
+    }
   } catch (err) {
     console.error("Error fetching testimonials in homepage Server Component:", err);
   }
